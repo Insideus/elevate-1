@@ -33,6 +33,8 @@ void elevate( )
 	BOOL fInQuotes = FALSE;
 	PTSTR pszCmdLine = GetCommandLine();
 
+	INT NSHOW = SW_SHOWNORMAL;
+
 	if (!pszCmdLine)
 		ExitProcess(~1);
 
@@ -66,6 +68,8 @@ void elevate( )
 			fNoPushD = TRUE;
 		else if (!fUnicode && CheckFlagI(pszCmdLine, TEXT('u')))
 			fUnicode = TRUE;
+		else if (CheckFlagI(pszCmdLine, TEXT('h')))
+			NSHOW = SW_HIDE;
 		else if (!fWait && CheckFlagI(pszCmdLine, TEXT('w')))
 			fWait = TRUE;
 		else
@@ -78,12 +82,13 @@ void elevate( )
 	{
 		static const TCHAR szUsageTemplateGeneral[] = TEXT("  -%c  %s.\n");
 
-		_tprintf(TEXT("Usage: elevate [(-c | -k) [-n] [-u]] [-w] command\n\n"));
+		_tprintf(TEXT("Usage: elevate [(-c | -k) [-n] [-u] [-h]] [-w] command\n\n"));
 		_tprintf(TEXT("Options:\n"));
 		_tprintf(szUsageTemplateGeneral, TEXT('c'), TEXT("Launches a terminating command processor; equivalent to \"cmd /c command\""));
 		_tprintf(szUsageTemplateGeneral, TEXT('k'), TEXT("Launches a persistent command processor; equivalent to \"cmd /k command\""));
 		_tprintf(szUsageTemplateGeneral, TEXT('n'), TEXT("When using -c or -k, do not pushd the current directory before execution"));
 		_tprintf(szUsageTemplateGeneral, TEXT('u'), TEXT("When using -c or -k, use Unicode; equivalent to \"cmd /u\""));
+		_tprintf(szUsageTemplateGeneral, TEXT('h'), TEXT("When using -c or -k, start \"cmd\" in hidden mode"));
 		_tprintf(szUsageTemplateGeneral, TEXT('w'), TEXT("Waits for termination; equivalent to \"start /wait command\""));
 
 		ExitProcess(~1);
@@ -101,7 +106,7 @@ void elevate( )
 		sei.cbSize = sizeof(SHELLEXECUTEINFO);
 		sei.fMask = SEE_MASK_NOCLOSEPROCESS | SEE_MASK_NOASYNC | SEE_MASK_FLAG_NO_UI;
 		sei.lpVerb = TEXT("runas");
-		sei.nShow = SW_SHOWNORMAL;
+		sei.nShow = NSHOW;
 
 		if (mode == MODE_NORMAL)
 		{

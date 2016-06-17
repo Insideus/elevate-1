@@ -14,13 +14,14 @@ Usage
 =====
 
 Synopsis:
-  elevate [(-c | -k) [-n] [-u]] [-w] command
+  elevate [(-c | -k) [-n] [-u] [-h]] [-w] command
 
 Options:
   -c  Launches a terminating command processor; equivalent to "cmd /c command".
   -k  Launches a persistent command processor; equivalent to "cmd /k command".
   -n  When using -c or -k, do not pushd the current directory before execution.
   -u  When using -c or -k, use Unicode; equivalent to "cmd /u".
+  -h  When using -c or -k, start "cmd" in hidden mode.
   -w  Waits for termination; equivalent to "start /wait command".
 
 Notes:
